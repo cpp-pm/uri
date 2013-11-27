@@ -71,6 +71,3 @@ if (DOXYGEN_FOUND)
     set(CPP-NETLIB_GENERATE_DOCS ON)
   endif()
 endif(DOXYGEN_FOUND)
-
-#propagate sources to parent scope for one-lib-build
-set(Uri_SRCS ${Uri_SRCS} PARENT_SCOPE)

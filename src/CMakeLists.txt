@@ -10,11 +10,6 @@ sugar_include("./") # URI_SOURCES
 if(NOT CPP-NETLIB_BUILD_SINGLE_LIB)
   add_library(network-uri ${URI_SOURCES})
   target_link_libraries(network-uri ${Boost_LIBRARIES})
-  if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    if (NOT CPP-NETLIB_DISABLE_LIBCXX)
-      target_link_libraries(network-uri "c++")
-    endif()
-  endif()
   install(
     TARGETS
     network-uri

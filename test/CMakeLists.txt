@@ -3,7 +3,15 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-include_directories(${GTEST_INCLUDE_DIRS})
+include(sugar_add_gtest)
+
+string(COMPARE EQUAL "${CMAKE_OSX_SYSROOT}" "iphoneos" is_ios)
+if(is_ios)
+  hunter_add_package(ios_sim)
+endif()
+hunter_add_package(GTest)
+
+find_package(GTest CONFIG REQUIRED)
 
 set(
   TESTS
@@ -19,13 +27,9 @@ set(
 
 foreach (test ${TESTS})
   add_executable(${test} ${test}.cpp)
-  add_dependencies(${test} network-uri)
-  target_link_libraries(${test} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} network-uri)
+  target_link_libraries(${test} GTest::main network-uri)
   if (OPENSSL_FOUND)
     target_link_libraries(${test} ${OPENSSL_LIBRARIES})
   endif()
-  set_target_properties(${test}
-    PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Uri_BINARY_DIR}/tests)
-  add_test(${test}
-    ${Uri_BINARY_DIR}/tests/${test})
+  sugar_add_gtest(${test} ${test})
 endforeach (test)

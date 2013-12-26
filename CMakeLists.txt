@@ -10,7 +10,7 @@ include(HunterGate.cmake)
 hunter_add_package(Boost COMPONENTS system filesystem)
 hunter_add_package(Sugar)
 
-find_package(Threads REQUIRED)
+include("${SUGAR_ROOT}/cmake/Sugar")
 
 if(CPP-NETLIB_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
   set(Boost_USE_STATIC_LIBS OFF)
@@ -49,9 +49,7 @@ add_subdirectory(src)
 
 # Testing
 if (CMAKE_PROJECT_NAME STREQUAL "Uri" OR CPP-NETLIB_BUILD_TESTS)
-  hunter_add_package(GTest)
   enable_testing()
-  find_package(GTest REQUIRED)
   add_subdirectory(test)
 endif()
 

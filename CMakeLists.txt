@@ -3,9 +3,12 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-
 cmake_minimum_required(VERSION 2.8)
 project(Uri)
+
+include(HunterGate.cmake)
+hunter_add_package(Boost COMPONENTS system filesystem)
+hunter_add_package(Sugar)
 
 find_package(Threads REQUIRED)
 
@@ -50,6 +53,7 @@ add_subdirectory(src)
 
 # Testing
 if (CMAKE_PROJECT_NAME STREQUAL "Uri" OR CPP-NETLIB_BUILD_TESTS)
+  hunter_add_package(GTest)
   enable_testing()
   find_package(GTest REQUIRED)
   add_subdirectory(test)

@@ -13,22 +13,27 @@ env:
 
 before_install:
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes # libstdc++-4.8
-    - if [ "${CXX}" == "clang++" ]; then sudo add-apt-repository --yes ppa:h-rayflood/llvm; fi # clang++-3.2
     - sudo apt-get update
 
 install:
-    - if [ "${CXX}" == "clang++" ]; then sudo apt-get -qq install clang-3.2; fi
+    - sudo apt-get install libcurl3-dev
     - sudo apt-get install g++-4.8; # clang need it for libstdc++ update
+    # install patched cmake version
+    - wget https://github.com/ruslo/CMake/archive/ios.universal.2.tar.gz
+    - tar xf ios.universal.2.tar.gz
+    - cmake -HCMake-ios.universal.2 -B_builds/cmake -DCMAKE_USE_SYSTEM_CURL=YES -DCMAKE_BUILD_TYPE=Release
+    - cmake --build _builds/cmake
+    - sudo cmake --build _builds/cmake --target install
+    - export PATH=/usr/local/bin:${PATH}
+    # --end
 
 before_script:
     # update compilers
     - if [ "${CXX}" == "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-    - if [ "${CXX}" == "clang++" ]; then export CXX="clang++-3.2" CC="clang-3.2"; fi
 
 script:
-    - mkdir _builds
-    - cd _builds
     # Note: clang not support libc++
-    - cmake -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -DCPP-NETLIB_DISABLE_LIBCXX=YES ..
-    - cmake --build .
-    - ctest
+    - cmake -H. -B_builds -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -DCPP-NETLIB_DISABLE_LIBCXX=YES ..
+    - cmake --build _builds
+    - cd _builds
+    - ctest -VV

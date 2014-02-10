@@ -4,6 +4,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 include(sugar_add_gtest)
+include(sugar_include)
 
 string(COMPARE EQUAL "${CMAKE_OSX_SYSROOT}" "iphoneos" is_ios)
 if(is_ios)
@@ -13,23 +14,8 @@ hunter_add_package(GTest)
 
 find_package(GTest CONFIG REQUIRED)
 
-set(
-  TESTS
-  uri_test
-  uri_encoding_test
-  uri_normalization_test
-  uri_comparison_test
-  uri_reference_test
-  uri_resolve_test
-  uri_builder_test
-  uri_stream_test
-  )
+sugar_include("./") # URI_TEST_SOURCES
 
-foreach (test ${TESTS})
-  add_executable(${test} ${test}.cpp)
-  target_link_libraries(${test} GTest::main network-uri)
-  if (OPENSSL_FOUND)
-    target_link_libraries(${test} ${OPENSSL_LIBRARIES})
-  endif()
-  sugar_add_gtest(${test} ${test})
-endforeach (test)
+add_executable(uri_test ${URI_TEST_SOURCES})
+target_link_libraries(uri_test GTest::main network-uri)
+sugar_add_gtest(uri_test uri_test)

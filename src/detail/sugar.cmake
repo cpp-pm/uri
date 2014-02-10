@@ -19,7 +19,6 @@ sugar_files(
     uri_parse.hpp
     uri_parse_authority.cpp
     uri_parse_authority.hpp
-    uri_percent_encode.cpp
     uri_percent_encode.hpp
     uri_resolve.cpp
     uri_resolve.hpp

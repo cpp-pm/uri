@@ -1,21 +1,21 @@
 language:
-    - cpp
+    - objective-c
 
 env:
-    # Note: clang not support libc++
-    - BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" TOOLCHAIN="clang_libstdcxx"
-    - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" TOOLCHAIN="gcc48"
-    - BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" TOOLCHAIN="gcc48"
-    - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" TOOLCHAIN="clang_libstdcxx"
+    # `clang_libstdcxx` toolchain is not fully supported:
+    #     * https://github.com/travis-ci-tester/travis-test-clang-mac-cxx-11
+    - BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" TOOLCHAIN="libcxx"
+    - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" TOOLCHAIN="libcxx" GENERATOR="-GXcode"
+    - BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" TOOLCHAIN="libcxx" GENERATOR="-GXcode"
+    - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" TOOLCHAIN="libcxx"
+    # test iOS simulator;
+    #     SUGAR_IOS_ARCH: https://github.com/ruslo/sugar/wiki/Universal-ios-library-%28optimization%29
+    - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" TOOLCHAIN="ios-nocodesign" GENERATOR="-GXcode" EXTRA_BUILD="-arch i386 -sdk iphonesimulator"
+    - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" TOOLCHAIN="ios-nocodesign" GENERATOR="-GXcode" EXTRA_BUILD="-arch i386 -sdk iphonesimulator"
 
 install:
-    # install clang 3.2 and gcc 4.8
-    #     * github.com/travis-ci-tester/travis-test-clang-3.2
-    #     * github.com/travis-ci-tester/travis-test-gcc-cxx-11
-    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes
-    - sudo apt-get update
-    - sudo apt-get install g++-4.8
-    # -- end
+    - brew install cmake
+    - brew install python3
 
     # install cmake toolchains
     - wget https://github.com/ruslo/polly/archive/v0.3.0.tar.gz
@@ -24,19 +24,15 @@ install:
     # -- end
 
     # install cmake
-    - sudo apt-get install libcurl3-dev
     - wget https://github.com/ruslo/CMake/archive/ios.universal.2.tar.gz
     - openssl sha1 ios.universal.2.tar.gz
     - tar xf ios.universal.2.tar.gz
     - cmake -HCMake-ios.universal.2 -B_builds/cmake -DCMAKE_USE_SYSTEM_CURL=YES -DCMAKE_BUILD_TYPE=Release
-    - cmake --build _builds/cmake
-    - sudo cmake --build _builds/cmake --target install
-    - export PATH=/usr/local/bin:${PATH}
+    - cmake --build _builds/cmake --target install
     # -- end
 
 script:
-    # Note: clang not support libc++
-    - cmake -H. -B_builds -DCMAKE_TOOLCHAIN_FILE=${POLLY_ROOT}/${TOOLCHAIN}.cmake -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-    - cmake --build _builds --config ${CMAKE_BUILD_TYPE}
+    - cmake -H. -B_builds ${GENERATOR} -DCMAKE_TOOLCHAIN_FILE=${POLLY_ROOT}/${TOOLCHAIN}.cmake -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+    - cmake --build _builds --config ${CMAKE_BUILD_TYPE} --use-stderr -- ${EXTRA_BUILD}
     - cd _builds
     - ctest -VV -C ${CMAKE_BUILD_TYPE}

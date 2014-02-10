@@ -7,8 +7,10 @@ include(sugar_include)
 sugar_include("./") # URI_SOURCES
 
 if(CPP-NETLIB_URI_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
+  set(URI_TYPE SHARED)
   set(Boost_USE_STATIC_LIBS OFF)
 else()
+  set(URI_TYPE STATIC)
   set(Boost_USE_STATIC_LIBS ON)
 endif()
 set(Boost_USE_MULTITHREADED ON)
@@ -20,7 +22,7 @@ set(CONF_DEST lib/cmake/CppNetlibUri)
 
 find_package(Boost 1.53 REQUIRED system filesystem)
 
-add_library(network-uri ${URI_SOURCES})
+add_library(network-uri ${URI_TYPE} ${URI_SOURCES})
 target_include_directories(
     network-uri
     PUBLIC

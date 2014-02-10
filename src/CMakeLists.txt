@@ -10,13 +10,6 @@ sugar_include("./") # URI_SOURCES
 if(NOT CPP-NETLIB_BUILD_SINGLE_LIB)
   add_library(network-uri ${URI_SOURCES})
   target_link_libraries(network-uri ${Boost_LIBRARIES})
-  install(
-    TARGETS
-    network-uri
-    DESTINATION lib
-    )
-
-  install(DIRECTORY network
-    DESTINATION include
-    )
+  install(TARGETS network-uri DESTINATION lib)
+  install(DIRECTORY network DESTINATION include PATTERN "*.hpp")
 endif()

@@ -12,7 +12,9 @@ hunter_add_package(Sugar)
 
 include("${SUGAR_ROOT}/cmake/Sugar")
 
-if(CPP-NETLIB_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
+option(CPP-NETLIB_URI_BUILD_SHARED_LIBS "Build URI shared libraries" OFF)
+
+if(CPP-NETLIB_URI_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
   set(Boost_USE_STATIC_LIBS OFF)
 else()
   set(Boost_USE_STATIC_LIBS ON)

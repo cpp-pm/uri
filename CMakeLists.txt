@@ -26,7 +26,7 @@ find_package(Boost 1.53 REQUIRED system filesystem)
 include_directories(${Uri_SOURCE_DIR}/src ${Boost_INCLUDE_DIRS})
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-  INCLUDE(CheckCXXCompilerFlag)
+  include(CheckCXXCompilerFlag)
   CHECK_CXX_COMPILER_FLAG(-std=c++11 HAVE_STD11)
 
   if (HAVE_STD11)

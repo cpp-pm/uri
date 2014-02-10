@@ -13,6 +13,7 @@ hunter_add_package(Sugar)
 include("${SUGAR_ROOT}/cmake/Sugar")
 
 option(CPP-NETLIB_URI_BUILD_SHARED_LIBS "Build URI shared libraries" OFF)
+option(CPP-NETLIB_URI_BUILD_TEST "Build tests" OFF)
 
 if(CPP-NETLIB_URI_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
   set(Boost_USE_STATIC_LIBS OFF)
@@ -50,7 +51,7 @@ endif(WIN32)
 add_subdirectory(src)
 
 # Testing
-if (CMAKE_PROJECT_NAME STREQUAL "Uri" OR CPP-NETLIB_BUILD_TESTS)
+if(CPP-NETLIB_URI_BUILD_TEST)
   enable_testing()
   add_subdirectory(test)
 endif()

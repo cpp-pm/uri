@@ -22,7 +22,7 @@ install:
     - tar xf v0.3.0.tar.gz
     - export POLLY_ROOT=`pwd`/polly-0.3.0
     # -- end
-
+    - export XCODE_XCCONFIG_FILE="${POLLY_ROOT}/scripts/NoCodeSign.xcconfig"
     # install cmake
     - wget https://github.com/ruslo/CMake/archive/ios.universal.2.tar.gz
     - openssl sha1 ios.universal.2.tar.gz

@@ -15,17 +15,6 @@ include("${SUGAR_ROOT}/cmake/Sugar")
 option(CPP-NETLIB_URI_BUILD_SHARED_LIBS "Build URI shared libraries" OFF)
 option(CPP-NETLIB_URI_BUILD_TEST "Build tests" OFF)
 
-if(CPP-NETLIB_URI_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
-  set(Boost_USE_STATIC_LIBS OFF)
-else()
-  set(Boost_USE_STATIC_LIBS ON)
-endif()
-
-set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.53 REQUIRED system filesystem)
-
-include_directories(${Uri_SOURCE_DIR}/src ${Boost_INCLUDE_DIRS})
-
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   include(CheckCXXCompilerFlag)
   CHECK_CXX_COMPILER_FLAG(-std=c++11 HAVE_STD11)
@@ -43,10 +32,10 @@ endif()
 
 if (MSVC)
   add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_VARIADIC_MAX=10)
-endif(MSVC)
+endif()
 if (WIN32)
   add_definitions(-D_WIN32_WINNT=0x0501)
-endif(WIN32)
+endif()
 
 add_subdirectory(src)
 
@@ -67,4 +56,4 @@ if (DOXYGEN_FOUND)
       COMMENT "Generating API documentation with Doxygen" VERBATIM)
     set(CPP-NETLIB_GENERATE_DOCS ON)
   endif()
-endif(DOXYGEN_FOUND)
+endif()

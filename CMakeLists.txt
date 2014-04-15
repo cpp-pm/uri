@@ -30,13 +30,6 @@ elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   message("C++ Flags: ${CMAKE_CXX_FLAGS} link flags: ${CMAKE_CXX_LINK_FLAGS}")
 endif()
 
-if (MSVC)
-  add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_VARIADIC_MAX=10)
-endif()
-if (WIN32)
-  add_definitions(-D_WIN32_WINNT=0x0501)
-endif()
-
 add_subdirectory(src)
 
 # Testing

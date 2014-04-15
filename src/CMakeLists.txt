@@ -40,10 +40,28 @@ target_include_directories(
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>"
     "$<INSTALL_INTERFACE:${INCL_DEST}>"
 )
-target_include_directories(network-uri PUBLIC ${Boost_INCLUDE_DIR})
+target_include_directories(network-uri SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 target_link_libraries(network-uri PUBLIC ${Boost_LIBRARIES})
 
+if(MSVC)
+  target_compile_definitions(
+      network-uri
+      PUBLIC
+      -D_SCL_SECURE_NO_WARNINGS -D_VARIADIC_MAX=10
+  )
+endif()
+
+if(WIN32)
+  target_compile_definitions(
+      network-uri
+      PUBLIC
+      -D_WIN32_WINNT=0x0501
+  )
+endif()
+
 install(TARGETS network-uri DESTINATION ${LIB_DEST} EXPORT CppNetlibUriTargets)
-install(DIRECTORY network DESTINATION ${INCL_DEST} FILES_MATCHING PATTERN "*.hpp")
+install(
+    DIRECTORY network DESTINATION ${INCL_DEST} FILES_MATCHING PATTERN "*.hpp"
+)
 install(EXPORT CppNetlibUriTargets DESTINATION ${CONF_DEST})
 install(FILES "${uri_config}" DESTINATION ${CONF_DEST})

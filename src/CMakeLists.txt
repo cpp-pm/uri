@@ -44,6 +44,10 @@ target_include_directories(network-uri SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
 target_link_libraries(network-uri PUBLIC ${Boost_LIBRARIES})
 
 if(MSVC)
+  target_compile_definitions(network-uri PUBLIC BOOST_ALL_NO_LIB=1)
+endif()
+
+if(MSVC)
   target_compile_definitions(
       network-uri
       PUBLIC

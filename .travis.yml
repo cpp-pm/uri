@@ -3,10 +3,10 @@ language:
 
 env:
     # Note: clang not support libc++
-    - BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" TOOLCHAIN="clang_libstdcxx"
-    - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" TOOLCHAIN="gcc48"
-    - BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" TOOLCHAIN="gcc48"
-    - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" TOOLCHAIN="clang_libstdcxx"
+    - BUILD_SHARED_LIBS="ON" CONFIG="Release" TOOLCHAIN="clang_libstdcxx"
+    - BUILD_SHARED_LIBS="OFF" CONFIG="Release" TOOLCHAIN="gcc48"
+    - BUILD_SHARED_LIBS="ON" CONFIG="Debug" TOOLCHAIN="gcc48"
+    - BUILD_SHARED_LIBS="OFF" CONFIG="Debug" TOOLCHAIN="clang_libstdcxx"
 
 install:
     # install clang 3.2 and gcc 4.8
@@ -15,28 +15,32 @@ install:
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes
     - sudo apt-get update
     - sudo apt-get install g++-4.8
-    # -- end
-
-    # install cmake toolchains
-    - wget https://github.com/ruslo/polly/archive/v0.3.0.tar.gz
-    - tar xf v0.3.0.tar.gz
-    - export POLLY_ROOT=`pwd`/polly-0.3.0
-    # -- end
-
-    # install cmake
+    - sudo apt-get install cmake
     - sudo apt-get install libcurl3-dev
-    - wget https://github.com/ruslo/CMake/archive/ios.universal.2.tar.gz
-    - openssl sha1 ios.universal.2.tar.gz
-    - tar xf ios.universal.2.tar.gz
-    - cmake -HCMake-ios.universal.2 -B_builds/cmake -DCMAKE_USE_SYSTEM_CURL=YES -DCMAKE_BUILD_TYPE=Release
-    - cmake --build _builds/cmake
-    - sudo cmake --build _builds/cmake --target install
-    - export PATH=/usr/local/bin:${PATH}
+    # -- end
+
+    # install cmake toolchains and script
+    - POLLY_VERSION="0.4.4"
+    - wget "https://github.com/ruslo/polly/archive/v${POLLY_VERSION}.tar.gz"
+    - tar xf "v${POLLY_VERSION}.tar.gz"
+    - export POLLY_ROOT="`pwd`/polly-${POLLY_VERSION}"
+    - export PATH="${POLLY_ROOT}/bin:${PATH}"
+    # -- end
+    # install cmake
+    - CMAKE_VERSION="3.0.0-ios-universal"
+    - wget "https://github.com/ruslo/CMake/archive/v${CMAKE_VERSION}.tar.gz"
+    - openssl sha1 "v${CMAKE_VERSION}.tar.gz"
+    - tar xf "v${CMAKE_VERSION}.tar.gz"
+    - cd "CMake-${CMAKE_VERSION}"
+    - build.py --install --toolchain default --config Release --fwd "CMAKE_USE_SYSTEM_CURL=YES"
+    - export PATH="`pwd`/_install/default/bin:${PATH}"
+    - cd ..
+    # -- end
+    # verify installed cmake
+    - which cmake
+    - cmake --version
     # -- end
 
 script:
     # Note: clang not support libc++
-    - cmake -H. -B_builds -DHUNTER_STATUS_DEBUG=ON -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_TOOLCHAIN_FILE=${POLLY_ROOT}/${TOOLCHAIN}.cmake -DCPP-NETLIB_URI_BUILD_TEST=ON -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-    - cmake --build _builds --config ${CMAKE_BUILD_TYPE}
-    - cd _builds
-    - ctest -VV -C ${CMAKE_BUILD_TYPE}
+    - build.py --test --verbose --toolchain ${TOOLCHAIN} --config ${CONFIG} --fwd CPP-NETLIB_URI_BUILD_TEST=ON BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}

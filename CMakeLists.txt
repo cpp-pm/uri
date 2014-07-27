@@ -6,7 +6,12 @@
 cmake_minimum_required(VERSION 2.8)
 project(Uri)
 
-include(HunterGate.cmake)
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.5.11.tar.gz"
+    SHA1 "3fb31d5a5d53fae93792866ef1486f83d15efe88"
+)
+
 hunter_add_package(Boost COMPONENTS system filesystem)
 hunter_add_package(Sugar)
 

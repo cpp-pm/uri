@@ -6,10 +6,8 @@ python:
 
 env:
     # Note: clang not support libc++
-    - BUILD_SHARED_LIBS="ON" CONFIG="Release" TOOLCHAIN="clang_libstdcxx"
-    - BUILD_SHARED_LIBS="OFF" CONFIG="Release" TOOLCHAIN="gcc48"
-    - BUILD_SHARED_LIBS="ON" CONFIG="Debug" TOOLCHAIN="gcc48"
-    - BUILD_SHARED_LIBS="OFF" CONFIG="Debug" TOOLCHAIN="clang_libstdcxx"
+    - CONFIG="Release" TOOLCHAIN="gcc48"
+    - CONFIG="Debug" TOOLCHAIN="clang_libstdcxx"
 
 install:
     # install clang 3.2 and gcc 4.8
@@ -46,4 +44,4 @@ install:
 
 script:
     # Note: clang not support libc++
-    - build.py --test --verbose --toolchain ${TOOLCHAIN} --config ${CONFIG} --fwd CPP-NETLIB_URI_BUILD_TEST=ON BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+    - build.py --test --verbose --toolchain ${TOOLCHAIN} --config ${CONFIG} --fwd CPP-NETLIB_URI_BUILD_TEST=ON

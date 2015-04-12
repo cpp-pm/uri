@@ -21,20 +21,19 @@ install:
     # -- end
 
     # install cmake toolchains and script
-    - POLLY_VERSION="0.4.4"
+    - POLLY_VERSION="0.6.2"
     - wget "https://github.com/ruslo/polly/archive/v${POLLY_VERSION}.tar.gz"
     - tar xf "v${POLLY_VERSION}.tar.gz"
-    - export POLLY_ROOT="`pwd`/polly-${POLLY_VERSION}"
-    - export PATH="${POLLY_ROOT}/bin:${PATH}"
+    - export PATH="`pwd`/polly-${POLLY_VERSION}/bin:${PATH}"
     # -- end
     # install cmake
-    - CMAKE_VERSION="3.0.0-ios-universal"
+    - CMAKE_VERSION="3.2.1-ruslo"
     - wget "https://github.com/ruslo/CMake/archive/v${CMAKE_VERSION}.tar.gz"
     - openssl sha1 "v${CMAKE_VERSION}.tar.gz"
     - tar xf "v${CMAKE_VERSION}.tar.gz"
     - cd "CMake-${CMAKE_VERSION}"
-    - build.py --install --toolchain default --config Release --fwd "CMAKE_USE_SYSTEM_CURL=YES"
-    - export PATH="`pwd`/_install/default/bin:${PATH}"
+    -   build.py --install --toolchain default --config Release --fwd "CMAKE_USE_SYSTEM_CURL=YES"
+    -   export PATH="`pwd`/_install/default/bin:${PATH}"
     - cd ..
     # -- end
     # verify installed cmake
@@ -44,4 +43,4 @@ install:
 
 script:
     # Note: clang not support libc++
-    - build.py --test --verbose --toolchain ${TOOLCHAIN} --config ${CONFIG} --fwd CPP-NETLIB_URI_BUILD_TEST=ON
+    - build.py --test --verbose --toolchain ${TOOLCHAIN} --config ${CONFIG} --fwd CPP-NETLIB_URI_BUILD_TEST=ON HUNTER_RUN_INSTALL=ON

@@ -6,8 +6,8 @@ python:
 
 env:
     # Note: clang not support libc++
-    - CONFIG="Release" TOOLCHAIN="gcc48"
-    - CONFIG="Debug" TOOLCHAIN="clang_libstdcxx"
+    - CONFIG="Release" TOOLCHAIN="gcc-4-8"
+    - CONFIG="Debug" TOOLCHAIN="clang-libstdcxx"
 
 install:
     # install clang 3.2 and gcc 4.8

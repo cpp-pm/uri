@@ -4,13 +4,14 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 2.8)
-project(Uri)
 
 include("cmake/HunterGate.cmake")
 HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.5.11.tar.gz"
-    SHA1 "3fb31d5a5d53fae93792866ef1486f83d15efe88"
+    URL "https://github.com/ruslo/hunter/archive/v0.8.1.tar.gz"
+    SHA1 "a9bd96ab113f3af870b13cd05cf4e75b8848cf4a"
 )
+
+project(Uri)
 
 hunter_add_package(Boost COMPONENTS system filesystem)
 hunter_add_package(Sugar)

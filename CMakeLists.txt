@@ -7,16 +7,15 @@ cmake_minimum_required(VERSION 2.8)
 
 include("cmake/HunterGate.cmake")
 HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.8.1.tar.gz"
-    SHA1 "a9bd96ab113f3af870b13cd05cf4e75b8848cf4a"
+    URL "https://github.com/ruslo/hunter/archive/v0.20.31.tar.gz"
+    SHA1 "65c8f2292566aedb2fe10e08e09c74dda8e5d07a"
 )
 
 project(Uri)
 
 hunter_add_package(Boost COMPONENTS system filesystem)
-hunter_add_package(Sugar)
-
-include("${SUGAR_ROOT}/cmake/Sugar")
+hunter_add_package(sugar)
+find_package(sugar CONFIG REQUIRED)
 
 option(CPP-NETLIB_URI_BUILD_SHARED_LIBS "Build URI shared libraries" OFF)
 option(CPP-NETLIB_URI_BUILD_TEST "Build tests" OFF)

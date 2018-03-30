@@ -9,9 +9,6 @@ else()
   set(URI_SRC_NETWORK_SUGAR_CMAKE_ 1)
 endif()
 
-include(sugar_files)
-include(sugar_include)
-
 sugar_include(uri)
 
 sugar_files(

@@ -4,7 +4,6 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 include(sugar_add_gtest)
-include(sugar_include)
 
 string(COMPARE EQUAL "${CMAKE_OSX_SYSROOT}" "iphoneos" is_ios)
 if(is_ios)
